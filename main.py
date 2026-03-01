@@ -8,7 +8,7 @@ import pandas as pd
 from typing import List, Optional
 import time
 
-app = FastAPI(title="Bode Sniper Simulator API")
+app = FastAPI(title="BRUTOS Sniper Simulator API")
 
 # Habilitar CORS para o frontend React
 app.add_middleware(

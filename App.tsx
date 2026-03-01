@@ -287,7 +287,7 @@ const App: React.FC = () => {
           {/* ASIDE REORDENADO NO MOBILE */}
           <aside className="w-full lg:w-80 flex flex-col gap-8 lg:gap-0">
             {/* VÍDEO: Segundo elemento a aparecer no mobile */}
-            <div className="order-1 lg:order-2 lg:mt-8 bg-[#111] rounded-[24px] border border-white/5 overflow-hidden shadow-2xl aspect-video relative group">
+            <div className="order-1 lg:order-2 lg:mt-8 bg-[#111] rounded-[24px] border border-white/5 overflow-hidden shadow-2xl aspect-[1/1.1] relative group">
               <video autoPlay loop muted playsInline className="w-full h-full object-cover">
                 <source src="/gif-video.mp4" type="video/mp4" />
               </video>
@@ -485,7 +485,7 @@ const App: React.FC = () => {
         </section>
       </div>
 
-      <footer className="mt-28 mb-10 text-[11px] text-gray-900 font-black uppercase tracking-[1.2em] opacity-30 text-center flex flex-col gap-2">
+      <footer className="mt-16 mb-10 text-[11px] text-gray-900 font-black uppercase tracking-[1.2em] opacity-30 text-center flex flex-col gap-2">
         <span>BRUTOS (BRT) Sniper Quant System v8.0.0 - Oracle Live Logic</span>
         <span className="tracking-[0.6em] text-[9px]">Apenas para fins de simulação e modelagem matemática.</span>
       </footer>
