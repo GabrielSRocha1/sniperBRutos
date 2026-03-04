@@ -77,8 +77,9 @@ const App: React.FC = () => {
     // No simulador, meta de usuários é o crescimento projetado ao longo dos meses
     const currentHolders = holders * m;
 
-    // Fator de Intensidade da Comunidade (Quanto mais perto dos 15k, mais próximo do ROI da BNB)
-    const fatorComunidade = currentHolders / ALVO_CONVERSAO;
+    // Fator de Intensidade da Comunidade (Considerando a meta de volume: Holders e o Ticket Médio)
+    // Usamos 1000 como benchmark de Ticket para manter a mesma proporção da fórmula original
+    const fatorComunidade = (currentHolders / ALVO_CONVERSAO) * (ticket / 1000);
 
     // Preço Projetado baseado no potencial histórico da BNB
     const precoProjetado = bdcPrice * (1 + (MULTIPLICADOR_BNB * fatorComunidade));
@@ -143,10 +144,10 @@ const App: React.FC = () => {
   // 5. CHART ENGINE
   useEffect(() => {
     if (!chartRef.current) return;
-    if (chartInstance.current) chartInstance.current.destroy();
     const isMobile = window.innerWidth < 768;
     const ctx = chartRef.current.getContext('2d');
     if (!ctx) return;
+
     const labels = Array.from({ length: 37 }, (_, i) => i.toString());
     const simulationData = labels.map((_, i) => getStatsAtMonth(i));
     const totalPortfolioData = simulationData.map(d => d.total);
@@ -242,6 +243,17 @@ const App: React.FC = () => {
       tooltipEl.style.transform = `translate(-50%, ${translateY})`;
     };
 
+    if (chartInstance.current) {
+      chartInstance.current.data.labels = labels;
+      chartInstance.current.data.datasets[0].data = totalPortfolioData;
+      chartInstance.current.data.datasets[1].data = baseAtivoData;
+      chartInstance.current.data.datasets[2].data = yieldData;
+      chartInstance.current.data.datasets[3].data = holdersGrowthData;
+      chartInstance.current.data.datasets[4].data = precoData;
+      chartInstance.current.update('normal');
+      return;
+    }
+
     chartInstance.current = new (window as any).Chart(ctx, {
       type: 'line',
       data: {
@@ -269,6 +281,12 @@ const App: React.FC = () => {
         }
       }
     });
+
+    return () => {
+      // Don't destroy immediately on every re-render since we are updating now.
+      // But we should clean up when the component unmounts.
+      // We will leave destruction handled by the framework unmount.
+    };
   }, [aporte, holders, ticket, supply, marketCap, isActive, bdcPrice]);
 
   return (
